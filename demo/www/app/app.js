@@ -8,6 +8,7 @@ angular.module('demo', [
   'demo.appRate.ctrl',
   'demo.barcodeScanner.ctrl',
   'demo.batteryStatus.ctrl',
+  'demo.beacon.ctrl',
   'demo.camera.ctrl',
   'demo.clipboard.ctrl',
   'demo.contacts.ctrl',
@@ -30,7 +31,6 @@ angular.module('demo', [
   'demo.localNotification.ctrl',
   'demo.media.ctrl',
   'demo.network.ctrl',
-  'demo.oauth.ctrl',
   'demo.preferences.ctrl',
   'demo.printer.ctrl',
   'demo.pushNotifications.ctrl',
@@ -39,7 +39,8 @@ angular.module('demo', [
   'demo.statusbar.ctrl',
   'demo.toast.ctrl',
   'demo.touchid.ctrl',
-  'demo.vibration.ctrl'
+  'demo.vibration.ctrl',
+  'demo.upsPushNotifications.ctrl'
 ])
 
   .run(function ($rootScope, $ionicPlatform, $cordovaNetwork, $cordovaBatteryStatus, $cordovaLocalNotification, $cordovaPush) {
@@ -162,6 +163,12 @@ angular.module('demo', [
         url: '/batteryStatus',
         templateUrl: 'app/batteryStatus/batteryStatus.html',
         controller: "BatteryStatusCtrl"
+      })
+
+      .state('beacon', {
+        url: '/beacon',
+        templateUrl: 'app/beacon/beacon.html',
+        controller: "BeaconCtrl"
       })
 
       .state('camera', {
@@ -298,12 +305,6 @@ angular.module('demo', [
         controller: "NetworkCtrl"
       })
 
-      .state('oauth', {
-        url: '/oauth',
-        templateUrl: 'app/oauth/oauth.html',
-        controller: "OauthCtrl"
-      })
-
       .state('preferences', {
         url: '/preferences',
         templateUrl: 'app/preferences/preferences.html',
@@ -358,8 +359,13 @@ angular.module('demo', [
         url: '/vibration',
         templateUrl: 'app/vibration/vibration.html',
         controller: "VibrationCtrl"
-      });
+      })
 
+      .state('upsPushNotifications', {
+        url: '/upsPushNotifications',
+        templateUrl: 'app/upsPushNotifications/pushNotifications.html',
+        controller: "UpsPushNotificationsCtrl"
+      });
 
     $urlRouterProvider.otherwise('/menu');
   });

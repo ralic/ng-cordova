@@ -19,7 +19,8 @@ describe('Service: $cordovaToast', function() {
 
     window.plugins = {
       toast: {
-        show: angular.noop
+        show: angular.noop,
+        hide: angular.noop
       }
     };
 
@@ -37,7 +38,7 @@ describe('Service: $cordovaToast', function() {
         var result;
 
         spyOn(window.plugins.toast, fnName)
-          .andCallFake(function (message, successCb, errorCb) {
+          .and.callFake(function (message, successCb, errorCb) {
             successCb(true);
           });
 
@@ -49,14 +50,14 @@ describe('Service: $cordovaToast', function() {
         $rootScope.$digest();
 
         expect(result).toBe(true);
-        expect(window.plugins.toast[fnName].calls[0].args[0]).toBe('some message');
+        expect(window.plugins.toast[fnName].calls.argsFor(0)[0]).toBe('some message');
       });
 
       it('should call window\'s plugins.toast.' + fnName + ' errorCallback when recjected', function() {
         var errorResult;
 
         spyOn(window.plugins.toast, fnName)
-          .andCallFake(function (message, successCb, errorCb) {
+          .and.callFake(function (message, successCb, errorCb) {
             errorCb('error response');
           });
 
@@ -78,7 +79,7 @@ describe('Service: $cordovaToast', function() {
     var result;
 
     spyOn(window.plugins.toast, 'show')
-      .andCallFake(function (message, duration, position, successCb, errorCb) {
+      .and.callFake(function (message, duration, position, successCb, errorCb) {
         successCb(true);
       });
 
@@ -99,11 +100,11 @@ describe('Service: $cordovaToast', function() {
     );
   });
 
-  it('should call window\'s plugins.toast.show errorCallback when recjected', function() {
+  it('should call window\'s plugins.toast.show errorCallback when rejected', function() {
     var errorResult;
 
     spyOn(window.plugins.toast, 'show')
-      .andCallFake(function (message, duration, position, successCb, errorCb) {
+      .and.callFake(function (message, duration, position, successCb, errorCb) {
         errorCb('error response');
       });
 
@@ -111,6 +112,23 @@ describe('Service: $cordovaToast', function() {
       .then(angular.noop, function (response) {
         errorResult = response;
       });
+
+    $rootScope.$digest();
+
+    expect(errorResult).toBe('error response');
+  });
+
+  it('should proxy plugins.toast.hide but never fail.', function () {
+    var errorResult;
+
+    spyOn(window.plugins.toast, 'hide')
+      .and.callFake(function () {
+        throw new Error('error response');
+      });
+
+    $cordovaToast.hide().then(angular.noop, function (response) {
+      errorResult = response;
+    });
 
     $rootScope.$digest();
 

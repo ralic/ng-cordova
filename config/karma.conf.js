@@ -2,7 +2,7 @@ var buildConfig = require('./build.config.js');
 
 module.exports = {
   files: [
-    // Include jQuery only for testing convience (lots of DOM checking for unit tests on directives)
+    // Include jQuery only for testing convenience (lots of DOM checking for unit tests on directives)
     'bower_components/angular/angular.min.js',
     'bower_components/angular-mocks/angular-mocks.js',
     'bower_components/jquery/dist/jquery.js',
@@ -19,6 +19,13 @@ module.exports = {
   preprocessors: {
     'src/plugins/*.js': ['coverage']
   },
+
+  plugins: [
+    'karma-jasmine',
+    'karma-phantomjs-launcher',
+    'karma-chrome-launcher',
+    'karma-coverage'
+  ],
 
   coverageReporter: {
     type : 'html',
@@ -43,4 +50,3 @@ module.exports = {
   // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
   browsers: ['Chrome']
 };
-

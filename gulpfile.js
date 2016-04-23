@@ -6,7 +6,7 @@ var gulp = require('gulp'),
   header = require('gulp-header'),
   jshint = require('gulp-jshint'),
   uglify = require('gulp-uglify'),
-  karma = require('karma').server,
+  Server = require('karma').Server,
   karmaConf = require('./config/karma.conf.js'),
   rename = require('gulp-rename'),
   shell = require('gulp-shell'),
@@ -14,18 +14,13 @@ var gulp = require('gulp'),
   changelog = require('conventional-changelog'),
   q = require('q'),
   fs = require('fs'),
-  jscs = require('gulp-jscs'),
-  git = require('gulp-git');
+  jscs = require('gulp-jscs');
 
-gulp.task('default', ['git', 'build']);
+gulp.task('default', ['build']);
 
 gulp.task('lint', ['jshint', 'jscs']);
 
-gulp.task('git', function(cb) {
-    git.updateSubmodule({ args: '--init --remote' }, cb);
-});
-
-gulp.task('build', ['git'], function () {
+gulp.task('build', function () {
   gulp.src(buildConfig.mockFiles)
     .pipe(concat('ng-cordova-mocks.js'))
     .pipe(header(buildConfig.closureStart))
@@ -79,7 +74,8 @@ gulp.task('karma', function (done) {
   karmaConf.singleRun = true;
   argv.browsers && (karmaConf.browsers = argv.browsers.trim().split(','));
   argv.reporters && (karmaConf.reporters = argv.reporters.trim().split(','));
-  karma.start(karmaConf, done);
+  var server = new Server(karmaConf, done);
+  server.start();
 });
 
 gulp.task('jshint', function () {
@@ -109,7 +105,8 @@ gulp.task('jscs', function () {
 gulp.task('karma-watch', function (done) {
   console.log(karmaConf);
   karmaConf.singleRun = false;
-  karma.start(karmaConf, done);
+  var server = new Server(karmaConf, done);
+  server.start();
 });
 
 gulp.task('watch', ['build'], function () {
